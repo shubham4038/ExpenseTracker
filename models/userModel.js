@@ -34,6 +34,10 @@ const userSchema = mongoose.Schema({
     expenses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Expense'
+    }],
+    groupDetails :[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Group'
     }]
 },{timestamps: true});
 

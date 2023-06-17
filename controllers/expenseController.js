@@ -17,9 +17,9 @@ exports.create = async (req,res,next) => {
             cost,
             user: user._id
         })
-        await user.expenses.push(expense);
+        user.expenses.push(expense);  // No needn to Use save before this 
         await user.save({validateBeforeSave: false});
-        res.status(404).json({
+        res.status(200).json({
             status:'Success',
             message:'Expense created',
             data: expense
@@ -42,7 +42,7 @@ exports.get = async (req,res,next) => {
                 message:'No expense details found'
             })
         }
-        res.status(404).json({
+        res.status(201).json({
             status:'Success',
             data: expense
         })
@@ -58,7 +58,7 @@ exports.get = async (req,res,next) => {
 exports.destroy = async (req,res,next) => {
     try{
         await Expense.findByIdAndDelete(req.params.id);
-        res.status(404).json({
+        res.status(200).json({
             status:'Success',
             message: 'Expense Deleted!'
         })
@@ -77,7 +77,7 @@ exports.update = async (req,res,next) => {
             new: true
         })
         if(!expense){
-            res.status(404).json({
+            res.status(200).json({
                 status:'Success',
                 message: "Expense couldn't be updated"
             })

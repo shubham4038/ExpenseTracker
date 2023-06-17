@@ -13,11 +13,11 @@ exports.signup = async (req, res, next) => {
     });
     res.status(200).json({
       status: "suucess",
-      user,
+      user
     });
   } catch (err) {
     res.status(404).json({
-      status: "failure",
+      status: "failur",
       err,
     });
   }
@@ -32,14 +32,13 @@ exports.login = async (req, res, next) => {
             message:"Please enter email and password",
         });
     }
-    const user = await User.findOne({email}).select('password');
+    const user = await User.findOne({email}).select('+password');
     if(!user || !(await user.verifyPassword(password, user.password))){
         res.status(404).json({
             status: "Failure",
             message:"Email or password is incorrect",
         });
     }
-    console.log("Hi")
     const jwtToken = jwt.sign({user:user._id},process.env.SECRET_KEY,{
         expiresIn: "5d"
     })
@@ -69,12 +68,8 @@ exports.protect = async (req,res,next) => {
       message: "Token Invalid"
     });
   }
-  const decoded = await promisify(jwt.verify)(token, process.env.SECRET_KEY);
-  console.log(decoded);
-
+  const decoded = await promisify(jwt.verify)(token, process.env.SECRET_KEY)
   const user = await User.findById(decoded.user);
-
-  console.log(user);
   req.user = user;
   next();
 
