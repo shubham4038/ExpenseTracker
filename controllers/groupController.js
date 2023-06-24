@@ -31,10 +31,16 @@ exports.addMembers = async (req,res,next)=>{
 }
 
 exports.calculateExpense = async (req,res,next)=>{
+    // const user = req.user --> Getting the user deatils from middle ware but not helpful in this case.
     const groupExpensedetails = await Group.findById(req.params.id);
-    console.log(groupExpensedetails.groupExpense);
-    console.log(groupExpensedetails.groupMember.length);
     const expenseEach = (groupExpensedetails.groupExpense) / (groupExpensedetails.groupMember.length);
+    const updatePromises = groupExpensedetails.groupMember.map(async (el) => {
+        const user = await User.findOne({ email: el.email });
+        user.expenseonYou = expenseEach;
+        await user.save();
+      });
+    
+      await Promise.all(updatePromises)
     return res.status(200).json({
         status:"Success",
         data:{
@@ -43,5 +49,14 @@ exports.calculateExpense = async (req,res,next)=>{
         message : `Every Person needs to pay ${expenseEach}`
     })
     
+}
+
+exports.checkExpense = async (req,res,next)=>{
+    const user = req.user;
+    console.log(user)
+}
+exports.updateExpense = async (req,res,next)=>{
+    const groupExpensedetails = await Group.findById(req.params.id);
+
 }
 

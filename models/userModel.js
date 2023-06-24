@@ -38,7 +38,13 @@ const userSchema = mongoose.Schema({
     groupDetails :[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Group'
-    }]
+    }],
+    expenseonYou : [
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Group'
+        }
+    ]
 },{timestamps: true});
 
 userSchema.pre('save', async function(next){
